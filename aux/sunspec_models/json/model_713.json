@@ -1,0 +1,110 @@
+{
+    "group": {
+        "desc": "DER storage capacity.",
+        "label": "DER Storage Capacity",
+        "name": "DERStorageCapacity",
+        "points": [
+            {
+                "desc": "DER storage capacity model ID.",
+                "label": "Model ID",
+                "mandatory": "M",
+                "name": "ID",
+                "size": 1,
+                "static": "S",
+                "type": "uint16",
+                "value": 713
+            },
+            {
+                "desc": "DER storage capacity model length.",
+                "label": "Model Length",
+                "mandatory": "M",
+                "name": "L",
+                "size": 1,
+                "static": "S",
+                "type": "uint16",
+                "value": 7
+            },
+            {
+                "desc": "Energy rating of the DER storage.",
+                "label": "Energy Rating",
+                "name": "WHRtg",
+                "sf": "WH_SF",
+                "size": 1,
+                "type": "uint16",
+                "units": "WH"
+            },
+            {
+                "desc": "Energy available of the DER storage (WHAvail = WHRtg * SoC * SoH)",
+                "label": "Energy Available",
+                "name": "WHAvail",
+                "sf": "WH_SF",
+                "size": 1,
+                "type": "uint16",
+                "units": "WH"
+            },
+            {
+                "desc": "State of charge of the DER storage.",
+                "label": "State of Charge",
+                "name": "SoC",
+                "sf": "Pct_SF",
+                "size": 1,
+                "type": "uint16",
+                "units": "Pct"
+            },
+            {
+                "desc": "State of health of the DER storage.",
+                "label": "State of Health",
+                "name": "SoH",
+                "sf": "Pct_SF",
+                "size": 1,
+                "type": "uint16",
+                "units": "Pct"
+            },
+            {
+                "desc": "Storage status.",
+                "label": "Status",
+                "name": "Sta",
+                "size": 1,
+                "symbols": [
+                    {
+                        "desc": "No warnings or errors pending.",
+                        "label": "OK",
+                        "name": "OK",
+                        "value": 0
+                    },
+                    {
+                        "desc": "One or more warnings pending.",
+                        "label": "Warning",
+                        "name": "WARNING",
+                        "value": 1
+                    },
+                    {
+                        "desc": "One or more errors pending.",
+                        "label": "Error",
+                        "name": "ERROR",
+                        "value": 2
+                    }
+                ],
+                "type": "enum16"
+            },
+            {
+                "desc": "Scale factor for energy capacity.",
+                "label": "Energy Scale Factor",
+                "name": "WH_SF",
+                "size": 1,
+                "static": "S",
+                "type": "sunssf"
+            },
+            {
+                "desc": "Scale factor for percentage.",
+                "label": "Percent Scale Factor",
+                "name": "Pct_SF",
+                "size": 1,
+                "static": "S",
+                "type": "sunssf"
+            }
+        ],
+        "type": "group"
+    },
+    "id": 713
+}
