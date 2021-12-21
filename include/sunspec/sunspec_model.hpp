@@ -35,6 +35,8 @@ namespace everest { namespace sunspec {
             void print_points();
 
         private:
+            Group(const Group&) = delete;
+            Group& operator=(const Group&) = delete;
             friend class Point;
             friend class SunspecModel;
             json& group_def;
@@ -56,7 +58,7 @@ namespace everest { namespace sunspec {
     class SunspecModel {
         public:
             SunspecModel(SunspecDevice& device, uint16_t model_id, uint16_t length, int offset);
-            everest::modbus::ModbusClient& get_modbus_client();
+            const everest::modbus::ModbusClient& get_modbus_client() const;
             const std::map<std::string, std::unique_ptr<Point> >& get_points() const;
             const std::map<std::string, std::unique_ptr<Group>>& get_groups() const;
             const std::map<std::string, std::vector<std::unique_ptr<Group>> >& get_repeating_groups() const;
@@ -68,6 +70,8 @@ namespace everest { namespace sunspec {
             const int offset;
         
         private:
+            SunspecModel(const SunspecModel&) = delete;
+            SunspecModel& operator=(const SunspecModel&) = delete;
             friend class SunspecDevice;
             friend class Group;
             friend class Point;
@@ -94,6 +98,8 @@ namespace everest { namespace sunspec {
             types::SunspecType read();
 
         private:
+            Point(const Point&) = delete;
+            Point& operator=(const Point&) = delete;
             SunspecModel& model;
             Group& group;
             json& point_def;
@@ -114,6 +120,8 @@ namespace everest { namespace sunspec {
             Symbol(json& symbol_def, std::string name, int value);
 
         private:
+            Symbol(const Symbol&) = delete;
+            Symbol& operator=(const Symbol&) = delete;
             std::string name;
             int value;
             json& symbol_def;

@@ -42,7 +42,7 @@ bool utils::is_common_model(uint16_t model_id) {
     return model_id == commons::COMMON_MODEL_ID;
 }
 
-types::ModbusReadFunction utils::make_modbus_read_function(everest::modbus::ModbusClient& modbus_client, const uint8_t& unit_id) {
+types::ModbusReadFunction utils::make_modbus_read_function(const everest::modbus::ModbusClient& modbus_client, const uint8_t& unit_id) {
     return [&] (uint16_t first_register_address, uint16_t num_registers_to_read) {
         return modbus_client.read_holding_register(unit_id, first_register_address, num_registers_to_read);
     };

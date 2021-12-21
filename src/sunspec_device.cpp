@@ -24,7 +24,7 @@ int SunspecDevice::get_start_address() {
   EVLOG(debug) << "Done.";
 }
 
-everest::modbus::ModbusClient& SunspecDevice::get_modbus_client() {
+const everest::modbus::ModbusClient& SunspecDevice::get_modbus_client() const {
   return this->device_mapping.get_modbus_client();
 }
 
@@ -46,7 +46,7 @@ const std::vector<std::unique_ptr<SunspecModel>>& SunspecDevice::get_models() {
   return this->models;
 }
 
-json SunspecDevice::get_device_information() {
+const json SunspecDevice::get_device_information() const {
 
   EVLOG(debug) << "Attempting to read device header information...";
   const auto& device_common_model = this->get_model_by_name("common");

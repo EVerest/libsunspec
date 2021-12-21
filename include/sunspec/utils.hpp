@@ -27,7 +27,7 @@ namespace everest { namespace sunspec { namespace utils {
     std::string iterable_to_string(const IterableType& iterable);
     json json_from_model_id(const uint16_t model_id);
     bool json_contains(const json& json_, const std::string& key);
-    types::ModbusReadFunction make_modbus_read_function(everest::modbus::ModbusClient& modbus_client, const uint8_t& unit_id);
+    types::ModbusReadFunction make_modbus_read_function(const everest::modbus::ModbusClient& modbus_client, const uint8_t& unit_id);
 
     template <typename T>
     float apply_scale_factor(T point_value, int16_t scale_factor) {

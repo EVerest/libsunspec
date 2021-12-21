@@ -35,14 +35,14 @@ namespace everest { namespace sunspec {
             *   so that the value in the correct type is returned. This allows the user to read the value of points
             *   of any type (strings, uints, ints, enum values, etc.)
             */
-            SunspecReader(const std::string& query, SunspecDeviceMapping& device_mapping)
+            SunspecReader(const std::string& query, const SunspecDeviceMapping& device_mapping)
                 : device_mapping(device_mapping) {
 
                 if (!this->is_query_valid(query)) {
                     throw exceptions::bad_query_string("Query string does not match the required format.");
                 }
                 const auto& query_contents = this->parse_query_arguments(query);
-                
+
                 // Simple argument count validation
                 this->validate_query_contents(query_contents);
                 this->parse_query_contents(query_contents);
@@ -125,8 +125,8 @@ namespace everest { namespace sunspec {
             std::string model_name;
             std::vector<std::tuple<std::string, int>> groupnames_and_indexes;
             std::string point_name;
-            SunspecDeviceMapping& device_mapping;
-            SunspecDevice* query_device;
+            const SunspecDeviceMapping& device_mapping;
+            const SunspecDevice* query_device;
             Point* query_point;
             PointType cached_value;
             std::map<std::string, json> information_cache;
@@ -190,7 +190,7 @@ namespace everest { namespace sunspec {
                 return matches;
             }
 
-            SunspecDevice& find_query_device() {
+            const SunspecDevice& find_query_device() const {
                 return this->device_mapping.get_device_by_index(this->device_index);
             }
 

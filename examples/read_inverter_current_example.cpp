@@ -16,7 +16,7 @@ using PointType = double;
 
 int main(int arg, char **argv) {
 
-    std::unique_ptr<sunspec::config::SunspecConfig> sunspec_config = sunspec::config::load_config_from_file("sunspec/config.ini");
+    std::unique_ptr<sunspec::config::SunspecConfig> sunspec_config = sunspec::config::load_config_from_file("dist/sunspec/config.ini");
     sunspec_config->query_string = "<0>::<inverter>::<A>";
     
     // Initializing TCP connection
@@ -24,7 +24,7 @@ int main(int arg, char **argv) {
     if (!conn.is_valid()) return 0;
 
     // Initializing modbus client with the given TCP connection
-    everest::modbus::ModbusTCPClient modbus_client = everest::modbus::ModbusTCPClient(conn);
+    everest::modbus::ModbusTCPClient modbus_client(conn);
 
     // Initializing device mapping and scanning for models
     sunspec::SunspecDeviceMapping sunspec_device_mapping(modbus_client, 1); // (modbus_client, unit_id)
