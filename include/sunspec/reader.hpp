@@ -35,7 +35,7 @@ namespace everest { namespace sunspec {
             *   so that the value in the correct type is returned. This allows the user to read the value of points
             *   of any type (strings, uints, ints, enum values, etc.)
             */
-            SunspecReader(const std::string& query, const SunspecDeviceMapping& device_mapping)
+            SunspecReader(const std::string& query, const SunspecDeviceMapping& device_mapping, bool initialize=true)
                 : device_mapping(device_mapping) {
 
                 if (!this->is_query_valid(query)) {
@@ -47,6 +47,13 @@ namespace everest { namespace sunspec {
                 this->validate_query_contents(query_contents);
                 this->parse_query_contents(query_contents);
 
+                if (initialize) {
+                    this->init();
+                }
+
+            }
+
+            void init() {
                 this->query_device = &this->find_query_device();
                 this->query_point = &this->find_query_point();
             }
