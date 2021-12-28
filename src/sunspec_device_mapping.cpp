@@ -47,11 +47,11 @@ std::tuple<uint16_t, uint16_t> SunspecDeviceMapping::read_model_header(int model
   return std::make_tuple(model_id, model_length);
 }
 
-const std::vector<std::unique_ptr<SunspecDevice>>& SunspecDeviceMapping::get_devices() {
+const std::vector<std::unique_ptr<SunspecDevice>>& SunspecDeviceMapping::get_devices() const {
   return this->devices;
 }
 
-everest::modbus::ModbusClient& SunspecDeviceMapping::get_modbus_client() {
+const everest::modbus::ModbusClient& SunspecDeviceMapping::get_modbus_client() const {
   return this->modbus_client;
 }
 
@@ -62,7 +62,7 @@ void SunspecDeviceMapping::add_device(std::unique_ptr<SunspecDevice>& device) {
     }
 }
 
-SunspecDevice& SunspecDeviceMapping::get_device_by_index(int index) {
+const SunspecDevice& SunspecDeviceMapping::get_device_by_index(int index) const {
   if (index < 0 || index >= this->devices.size()) {
     std::stringstream error_msg;
     error_msg << "Trying to read device with index " << index << " from device mapping having " << this->devices.size() << " devices. (index >= size)";
@@ -72,7 +72,7 @@ SunspecDevice& SunspecDeviceMapping::get_device_by_index(int index) {
   return *(this->devices.at(index));
 }
 
-std::vector<json> SunspecDeviceMapping::get_devices_information() {
+const std::vector<json> SunspecDeviceMapping::get_devices_information() const {
   std::vector<json> devices_info;
   for (const auto& device : this->devices) {
     devices_info.push_back( device->get_device_information() );

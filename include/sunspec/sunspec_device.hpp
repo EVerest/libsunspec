@@ -22,12 +22,14 @@ namespace everest { namespace sunspec {
             void add_model(const uint16_t model_id, uint16_t model_length, const int offset);
             const std::vector<std::unique_ptr<SunspecModel>>& get_models();
             const SunspecModel& get_model_by_name(const std::string& name) const;
-            everest::modbus::ModbusClient& get_modbus_client();
+            const everest::modbus::ModbusClient& get_modbus_client() const;
             const uint8_t& get_unit_id();
             void print_name_index_map() const;
-            json get_device_information();
+            const json get_device_information() const;
 
         private:
+            SunspecDevice(const SunspecDevice&) = delete;
+            SunspecDevice& operator=(const SunspecDevice&) = delete;
             std::tuple<uint16_t, uint16_t> read_model_header(int model_start_address);
             uint8_t unit_id;
             int mapped_start;

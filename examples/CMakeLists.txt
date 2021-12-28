@@ -1,0 +1,7 @@
+add_executable(read_manufacturer_example read_manufacturer_example.cpp)
+target_link_libraries(read_manufacturer_example libsunspec everest::modbus nlohmann_json::nlohmann_json everest::log)
+
+add_executable(read_inverter_current_example read_inverter_current_example.cpp)
+target_link_libraries(read_inverter_current_example libsunspec everest::modbus nlohmann_json::nlohmann_json everest::log)
+
+install(TARGETS read_manufacturer_example read_inverter_current_example DESTINATION sunspec/examples)

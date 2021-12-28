@@ -175,7 +175,7 @@ const std::shared_ptr<Group> SunspecModel::get_base_group() const {
     return this->base_group;
 }
 
-everest::modbus::ModbusClient& SunspecModel::get_modbus_client() {
+const everest::modbus::ModbusClient& SunspecModel::get_modbus_client() const {
     return this->device.get_modbus_client();
 }
 
