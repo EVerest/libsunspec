@@ -19,7 +19,7 @@ namespace everest { namespace sunspec {
             const std::vector<std::unique_ptr<SunspecDevice>>& get_devices() const;
             const everest::modbus::ModbusClient& get_modbus_client() const;
             const SunspecDevice& get_device_by_index(int index) const;
-            const std::vector<json> get_devices_information() const;
+            const json get_devices_information() const;
             void print_summary();
 
         private:

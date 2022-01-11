@@ -72,8 +72,8 @@ const SunspecDevice& SunspecDeviceMapping::get_device_by_index(int index) const 
   return *(this->devices.at(index));
 }
 
-const std::vector<json> SunspecDeviceMapping::get_devices_information() const {
-  std::vector<json> devices_info;
+const json SunspecDeviceMapping::get_devices_information() const {
+  json devices_info = json::array();
   for (const auto& device : this->devices) {
     devices_info.push_back( device->get_device_information() );
   }
