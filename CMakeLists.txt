@@ -39,6 +39,7 @@ target_include_directories(libsunspec
 
 
 add_subdirectory(aux)
+add_subdirectory(src)
 install(FILES config.ini DESTINATION sunspec/)
 
 if (BUILD_EXAMPLES)
