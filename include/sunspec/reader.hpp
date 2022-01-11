@@ -5,6 +5,7 @@
 
 #include <string>
 #include <regex>
+#include <iostream>
 
 #include <everest/logging.hpp>
 
