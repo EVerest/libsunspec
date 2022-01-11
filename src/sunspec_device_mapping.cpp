@@ -28,7 +28,7 @@ int SunspecDeviceMapping::detect_base_register() {
       read_result = this->modbus_client.read_holding_register(this->unit_id, current_reg, 2);
       EVLOG(debug) << "Received bytes sequence during scan: " << everest::connection::utils::get_bytes_hex_string(read_result);
       if ( utils::is_sunspec_identifier(read_result) ) {
-        EVLOG(info) << "Found base register at address " << current_reg << ". Looking for models and device maps...";
+        EVLOG(debug) << "Found base register at address " << current_reg << ". Looking for models and device maps...";
         return current_reg;
       }
   }
@@ -108,20 +108,20 @@ void SunspecDeviceMapping::scan() {
         header_info = this->read_model_header(start_address);
         model_id = std::get<0>(header_info);
         model_length = std::get<1>(header_info);
-        EVLOG(info) << "Detected model ID: " << model_id << " with model length " << model_length;
+        EVLOG(debug) << "Detected model ID: " << model_id << " with model length " << model_length;
 
         if (utils::is_common_model(model_id)) {
           // Saving device state to devices list and reinitializing
           this->add_device(device);          
           EVLOG(debug) << "Attempting to create SunspecDevice with start address offset=" << start_address << ", unit_id=" << this->unit_id;
           device = std::make_unique<SunspecDevice>((*this), start_address, this->unit_id);
-          EVLOG(info) << "Created new SunspecDevice with the address offset " << start_address;
+          EVLOG(debug) << "Created new SunspecDevice with the address offset " << start_address;
         }
 
         if (utils::is_zero_length_model(model_id, model_length)) {
           // Adding final device and exiting.
 	        this->add_device(device);
-          EVLOG(info) << "Found Sunspec Zero-Length model at address: " << start_address << " Device count: " << this->devices.size() << " Model count: " << model_count;
+          EVLOG(debug) << "Found Sunspec Zero-Length model at address: " << start_address << " Device count: " << this->devices.size() << " Model count: " << model_count;
           break;
         }
 
