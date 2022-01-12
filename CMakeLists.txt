@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 find_package(EDM REQUIRED)
 
-SET(Boost_USE_STATIC_LIBS ON)
+#SET(Boost_USE_STATIC_LIBS ON)
 include_directories( ${Boost_INCLUDE_DIR} )
 
 option(BUILD_EXAMPLES "Build examples" OFF)
