@@ -31,7 +31,7 @@ namespace everest { namespace sunspec { namespace commons {
     //! Constant for the undefined value.
     constexpr int16_t UNDEFINED_SF_VALUE = 0x8000;
     //! Sunspec types that are strictly numeric
-    const std::set<std::string> NUMERIC_TYPES = {"uint16", "int16", "uint32", "int32"};
+    const std::set<std::string> NUMERIC_TYPES = {"uint16", "int16", "uint32", "int32", "float32"};
 
 } // namespace commons
  } // namespace sunspec

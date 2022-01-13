@@ -20,6 +20,7 @@ const std::map<std::string, types::SunspecTypeInterpreter> conversion::sunspec_i
     {"acc32", conversion::bytevector_to_uint32},
     {"enum32", conversion::bytevector_to_uint32},
     {"int32", conversion::bytevector_to_int32},
+    {"float32", conversion::bytevector_to_float32},
     {"sunssf", conversion::bytevector_to_int16}
 };
 
@@ -86,6 +87,23 @@ int32_t conversion::bytevector_to_int32(const types::ByteVector& bytevector) {
     return result;
 }
 
+float conversion::bytevector_to_float32(const types::ByteVector& bytevector) {
+    EVLOG(debug) << "Converting bytevector to float32: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+
+    // Reversing bytevector since MODBUS is big-endian and ARM is little-endian
+    uint8_t inv_bytes[4];
+    for (int i = 0 ; i < 4 ; i++) {
+        inv_bytes[i] = bytevector[4-i-1];
+    }
+
+    float result;
+    memcpy(&result, inv_bytes, sizeof(result));
+    EVLOG(debug) << "Conversion to float32 result: " << result;
+
+    return result;
+
+}
+
 double conversion::as_numeric(types::SunspecType sunspec_value) {
     if (sunspec_value.type() == typeid(uint16_t))
         return boost::get<uint16_t>(sunspec_value);
@@ -95,5 +113,7 @@ double conversion::as_numeric(types::SunspecType sunspec_value) {
         return boost::get<uint32_t>(sunspec_value);
     if (sunspec_value.type() == typeid(int32_t))
         return boost::get<int32_t>(sunspec_value);
+    if (sunspec_value.type() == typeid(float))
+        return boost::get<float>(sunspec_value);
     throw exceptions::numerical_conversion_error("Value is flagged as numeric but no suitable type was found");
 }

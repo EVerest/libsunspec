@@ -207,9 +207,11 @@ int16_t Point::get_scale_factor() {
 
     EVLOG(debug) << "Attempting to read scale factor for point " << this->name << " with address offset " << this->offset;
 
-    if (!this->requires_scale_factor_)
-        throw exceptions::scaling_error("Trying to read scale factor for a point that doesn't require one.");
-    
+    if (!this->requires_scale_factor_) {
+        EVLOG(warning) << "Trying to read scale factor for a point that doesn't require one. Returning a neutral scale factor.\n";
+        return 0;
+    }
+
     if (this->scale_factor_value != commons::UNDEFINED_SF_VALUE)
         return this->scale_factor_value;
 
