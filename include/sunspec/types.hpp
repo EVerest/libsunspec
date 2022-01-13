@@ -10,7 +10,7 @@
 
 namespace everest { namespace sunspec { namespace types {
 
-    using SunspecType = boost::variant<uint16_t, int16_t, uint32_t, int32_t, double, std::string>;
+    using SunspecType = boost::variant<uint16_t, int16_t, uint32_t, int32_t, double, float, std::string>;
     using ByteVector = std::vector<uint8_t>;
     using ModbusReadFunction = std::function<ByteVector(uint16_t first_register_address, uint16_t num_registers_to_read)>;
     using SunspecTypeInterpreter = std::function<SunspecType(const ByteVector& bytevector)>;
