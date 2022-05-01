@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 #include <nlohmann/json.hpp>
 
 #include <sunspec/sunspec_model.hpp>

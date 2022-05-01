@@ -4,7 +4,7 @@
 #include <sstream>
 #include <tuple>
 
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 
 #include <sunspec/sunspec_device_mapping.hpp>
 #include <sunspec/sunspec_device.hpp>

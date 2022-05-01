@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2020 - 2021 Pionix GmbH and Contributors to EVerest
 #include <iostream>
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 #include <memory>
 
 #include <modbus/modbus_client.hpp>

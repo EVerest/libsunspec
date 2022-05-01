@@ -7,7 +7,7 @@
 #include <fstream>
 #include <math.h>
 
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 #include <nlohmann/json.hpp>
 
 #include <sunspec/utils.hpp>
