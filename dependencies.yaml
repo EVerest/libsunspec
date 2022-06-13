@@ -1,10 +1,10 @@
 ---
 liblog:
-  git: git@github.com:EVerest/liblog.git
+  git: https://github.com/EVerest/liblog.git
   git_tag: main
   options: ["BUILD_EXAMPLES OFF"]
 libmodbus:
-  git: git@github.com:EVerest/libmodbus.git
+  git: https://github.com/EVerest/libmodbus.git
   git_tag: main
 nlohmann_json:
   git: https://github.com/nlohmann/json
