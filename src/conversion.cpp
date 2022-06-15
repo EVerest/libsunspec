@@ -25,15 +25,15 @@ const std::map<std::string, types::SunspecTypeInterpreter> conversion::sunspec_i
 };
 
 std::string conversion::bytevector_to_string(const types::ByteVector& bytevector) {
-    EVLOG(debug) << "Converting bytevector to string: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+    EVLOG_debug << "Converting bytevector to string: " << everest::connection::utils::get_bytes_hex_string(bytevector);
     std::string str(bytevector.begin(), bytevector.end());
-    EVLOG(debug) << "To string conversion result: " << str;
+    EVLOG_debug << "To string conversion result: " << str;
     return str;
 }
 
 uint16_t conversion::bytevector_to_uint16(const types::ByteVector& bytevector) {
 
-    EVLOG(debug) << "Converting bytevector to uint16: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+    EVLOG_debug << "Converting bytevector to uint16: " << everest::connection::utils::get_bytes_hex_string(bytevector);
     if (bytevector.size() > 2) {
         throw exceptions::type_conversion_error("Cannot fit bytevector of size bigger than 2 into uint16.");
     }
@@ -42,14 +42,14 @@ uint16_t conversion::bytevector_to_uint16(const types::ByteVector& bytevector) {
     }
 
     uint16_t result = (bytevector[0] << 8) | bytevector[1];
-    EVLOG(debug) << "Conversion to uint16 result: " << result;
+    EVLOG_debug << "Conversion to uint16 result: " << result;
 
     return result;
 }
 
 uint32_t conversion::bytevector_to_uint32(const types::ByteVector& bytevector) {
 
-    EVLOG(debug) << "Converting bytevector to uint32: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+    EVLOG_debug << "Converting bytevector to uint32: " << everest::connection::utils::get_bytes_hex_string(bytevector);
     if (bytevector.size() > 4) {
         throw exceptions::type_conversion_error("Cannot fit bytevector of size bigger than 4 into uint32.");
     }
@@ -58,37 +58,37 @@ uint32_t conversion::bytevector_to_uint32(const types::ByteVector& bytevector) {
     }
 
     uint32_t result = (bytevector[0] << 24) | (bytevector[1] << 16) | (bytevector[2] << 8) | bytevector[3];
-    EVLOG(debug) << "Conversion to uint32 result: " << result;
+    EVLOG_debug << "Conversion to uint32 result: " << result;
 
     return result;
 }
 
 int16_t conversion::bytevector_to_int16(const types::ByteVector& bytevector) {
 
-    EVLOG(debug) << "Converting bytevector to int16: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+    EVLOG_debug << "Converting bytevector to int16: " << everest::connection::utils::get_bytes_hex_string(bytevector);
     uint16_t as_uint16 = bytevector_to_uint16(bytevector);
     int16_t result;
     std::memcpy(&result, &as_uint16, sizeof(as_uint16));
 
-    EVLOG(debug) << "Conversion to int16 result: " << result;
+    EVLOG_debug << "Conversion to int16 result: " << result;
 
     return result;
 
 }
 
 int32_t conversion::bytevector_to_int32(const types::ByteVector& bytevector) {
-    EVLOG(debug) << "Converting bytevector to int32: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+    EVLOG_debug << "Converting bytevector to int32: " << everest::connection::utils::get_bytes_hex_string(bytevector);
     uint32_t as_uint32 = bytevector_to_uint32(bytevector);
     int32_t result;
     std::memcpy(&result, &as_uint32, sizeof(as_uint32));
 
-    EVLOG(debug) << "Conversion to int32 result: " << result;
+    EVLOG_debug << "Conversion to int32 result: " << result;
 
     return result;
 }
 
 float conversion::bytevector_to_float32(const types::ByteVector& bytevector) {
-    EVLOG(debug) << "Converting bytevector to float32: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+    EVLOG_debug << "Converting bytevector to float32: " << everest::connection::utils::get_bytes_hex_string(bytevector);
 
     // Reversing bytevector since MODBUS is big-endian and ARM is little-endian
     uint8_t inv_bytes[4];
@@ -98,7 +98,7 @@ float conversion::bytevector_to_float32(const types::ByteVector& bytevector) {
 
     float result;
     memcpy(&result, inv_bytes, sizeof(result));
-    EVLOG(debug) << "Conversion to float32 result: " << result;
+    EVLOG_debug << "Conversion to float32 result: " << result;
 
     return result;
 

@@ -18,7 +18,7 @@ SunspecDeviceMapping::SunspecDeviceMapping(everest::modbus::ModbusClient& modbus
     : modbus_client(modbus_client),
       unit_id(unit_id),
       start(-1) {
-          EVLOG(debug) << "Initializing SunspecDeviceMapping with unit_id=" << (int) unit_id;
+          EVLOG_debug << "Initializing SunspecDeviceMapping with unit_id=" << (int) unit_id;
           this->start = this->detect_base_register();
 }
 
@@ -26,15 +26,15 @@ int SunspecDeviceMapping::detect_base_register() {
   std::vector<uint8_t> read_result;
   for (const int& current_reg : commons::BASE_REGISTER_ADDRESSES) {
       read_result = this->modbus_client.read_holding_register(this->unit_id, current_reg, 2);
-      EVLOG(debug) << "Received bytes sequence during scan: " << everest::connection::utils::get_bytes_hex_string(read_result);
+      EVLOG_debug << "Received bytes sequence during scan: " << everest::connection::utils::get_bytes_hex_string(read_result);
       if ( utils::is_sunspec_identifier(read_result) ) {
-        EVLOG(debug) << "Found base register at address " << current_reg << ". Looking for models and device maps...";
+        EVLOG_debug << "Found base register at address " << current_reg << ". Looking for models and device maps...";
         return current_reg;
       }
   }
   std::stringstream error_msg;
   error_msg << "Could not detect candidate for base register for device. Is this really a Sunspec conformant device?";
-  EVLOG(error) << error_msg.str();
+  EVLOG_error << error_msg.str();
   throw exceptions::scanning_error(error_msg.str());
 }
 
@@ -58,7 +58,7 @@ const everest::modbus::ModbusClient& SunspecDeviceMapping::get_modbus_client() c
 void SunspecDeviceMapping::add_device(std::unique_ptr<SunspecDevice>& device) {
     if (device) {
       this->devices.push_back( std::move(device) );
-      EVLOG(debug) << "Added device with " << this->devices.back()->get_models().size() << " models to mapping.";
+      EVLOG_debug << "Added device with " << this->devices.back()->get_models().size() << " models to mapping.";
     }
 }
 
@@ -66,7 +66,7 @@ const SunspecDevice& SunspecDeviceMapping::get_device_by_index(int index) const 
   if (index < 0 || index >= this->devices.size()) {
     std::stringstream error_msg;
     error_msg << "Trying to read device with index " << index << " from device mapping having " << this->devices.size() << " devices. (index >= size)";
-    EVLOG(error) << error_msg.str();
+    EVLOG_error << error_msg.str();
     throw exceptions::model_access_error(error_msg.str());
   }
   return *(this->devices.at(index));
@@ -104,24 +104,24 @@ void SunspecDeviceMapping::scan() {
     while (true) {
 
         // Reading model header (id + length)
-        EVLOG(debug) << "Reading model header in start address: " << start_address;
+        EVLOG_debug << "Reading model header in start address: " << start_address;
         header_info = this->read_model_header(start_address);
         model_id = std::get<0>(header_info);
         model_length = std::get<1>(header_info);
-        EVLOG(debug) << "Detected model ID: " << model_id << " with model length " << model_length;
+        EVLOG_debug << "Detected model ID: " << model_id << " with model length " << model_length;
 
         if (utils::is_common_model(model_id)) {
           // Saving device state to devices list and reinitializing
           this->add_device(device);          
-          EVLOG(debug) << "Attempting to create SunspecDevice with start address offset=" << start_address << ", unit_id=" << this->unit_id;
+          EVLOG_debug << "Attempting to create SunspecDevice with start address offset=" << start_address << ", unit_id=" << this->unit_id;
           device = std::make_unique<SunspecDevice>((*this), start_address, this->unit_id);
-          EVLOG(debug) << "Created new SunspecDevice with the address offset " << start_address;
+          EVLOG_debug << "Created new SunspecDevice with the address offset " << start_address;
         }
 
         if (utils::is_zero_length_model(model_id, model_length)) {
           // Adding final device and exiting.
 	        this->add_device(device);
-          EVLOG(debug) << "Found Sunspec Zero-Length model at address: " << start_address << " Device count: " << this->devices.size() << " Model count: " << model_count;
+          EVLOG_debug << "Found Sunspec Zero-Length model at address: " << start_address << " Device count: " << this->devices.size() << " Model count: " << model_count;
           break;
         }
 

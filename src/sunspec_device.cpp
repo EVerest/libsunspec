@@ -21,9 +21,9 @@ SunspecDevice::SunspecDevice(SunspecDeviceMapping& device_mapping, const int map
       mapped_start(mapped_start) {}
 
 int SunspecDevice::get_start_address() {
-  EVLOG(debug) << "Getting device mapped start.";
+  EVLOG_debug << "Getting device mapped start.";
   return this->mapped_start;
-  EVLOG(debug) << "Done.";
+  EVLOG_debug << "Done.";
 }
 
 const everest::modbus::ModbusClient& SunspecDevice::get_modbus_client() const {
@@ -31,13 +31,13 @@ const everest::modbus::ModbusClient& SunspecDevice::get_modbus_client() const {
 }
 
 void SunspecDevice::add_model(const uint16_t id, const uint16_t length, const int offset) {
-  EVLOG(debug) << "Trying to add model with id " << id << ", length " << length << " and offset " << offset;
+  EVLOG_debug << "Trying to add model with id " << id << ", length " << length << " and offset " << offset;
   std::unique_ptr<SunspecModel> model = std::make_unique<SunspecModel>(*this, id, length, offset);
   model->initialize_model();
   this->model_name_to_index[ model->get_name() ] = this->models.size();
-  EVLOG(debug) << "Added to name map: " << model->get_name() << ": " << this->model_name_to_index[model->get_name()];
+  EVLOG_debug << "Added to name map: " << model->get_name() << ": " << this->model_name_to_index[model->get_name()];
   this->models.push_back( std::move(model) );
-  EVLOG(debug) << "Added model with id " << id << ", length " << length << " and offset " << offset;
+  EVLOG_debug << "Added model with id " << id << ", length " << length << " and offset " << offset;
 }
 
 const uint8_t& SunspecDevice::get_unit_id() {
@@ -50,7 +50,7 @@ const std::vector<std::unique_ptr<SunspecModel>>& SunspecDevice::get_models() {
 
 const json SunspecDevice::get_device_information() const {
 
-  EVLOG(debug) << "Attempting to read device header information...";
+  EVLOG_debug << "Attempting to read device header information...";
   const auto& device_common_model = this->get_model_by_name("common");
   const auto& common_model_points = device_common_model.get_points();
 
@@ -70,7 +70,7 @@ const SunspecModel& SunspecDevice::get_model_by_name(const std::string& name) co
   if (!this->model_name_to_index.count(name)) {
     std::stringstream error_msg;
     error_msg << "\nName not present in device model indexes map: " << name;
-    EVLOG(error) << error_msg.str();
+    EVLOG_error << error_msg.str();
     throw exceptions::missing_model_name(error_msg.str());
   }
   int index_in_models_list = this->model_name_to_index.at(name);
@@ -78,7 +78,7 @@ const SunspecModel& SunspecDevice::get_model_by_name(const std::string& name) co
 }
 
 void SunspecDevice::print_name_index_map() const {
-  EVLOG(debug) << "Trying to print name index map";
+  EVLOG_debug << "Trying to print name index map";
   for (const auto& it : this->model_name_to_index) {
     std::cout << "name: " << it.first << ", index: " << it.second << std::endl;
   }

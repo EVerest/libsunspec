@@ -24,12 +24,12 @@ bool utils::json_contains(const json& json_, const std::string& key) {
 
 bool utils::is_sunspec_identifier(const std::string& str) {
     bool res = str == commons::SUNS_IDENTIFIER;
-    EVLOG(debug) << "Checking if string is the SunS identifier: " << str << ". Result: " << res;
+    EVLOG_debug << "Checking if string is the SunS identifier: " << str << ". Result: " << res;
     return res;
 }
 
 bool utils::is_sunspec_identifier(const std::vector<uint8_t>& bytevector) {
-    EVLOG(debug) << "Checking if bytevector is the SunS identifier: " << everest::connection::utils::get_bytes_hex_string(bytevector);
+    EVLOG_debug << "Checking if bytevector is the SunS identifier: " << everest::connection::utils::get_bytes_hex_string(bytevector);
     return bytevector[0] == commons::SUNS_IDENTIFIER[0] &&
            bytevector[1] == commons::SUNS_IDENTIFIER[1] &&
            bytevector[2] == commons::SUNS_IDENTIFIER[2] &&
@@ -64,7 +64,7 @@ json utils::json_from_model_id(const uint16_t model_id) {
     // Reading model id file
     std::stringstream filename;
     filename << commons::JSON_MODELS_BASE_FOLDER << "/model_" << model_id << ".json";
-    EVLOG(debug) << "SunspecModel::SunspecModel() - Reading file " << filename.str();
+    EVLOG_debug << "SunspecModel::SunspecModel() - Reading file " << filename.str();
     std::ifstream model_file(filename.str());
     json j;
     model_file >> j;

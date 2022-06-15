@@ -24,7 +24,7 @@ Point& Group::get_point_by_name(const std::string& point_name) {
     if (!this->points.count(point_name)) {
         std::stringstream error_msg;
         error_msg << "Point with name " << point_name << " not contained in group with name " << this->name;
-        EVLOG(error) << error_msg.str();
+        EVLOG_error << error_msg.str();
         throw exceptions::point_access_error(error_msg.str());
     }
     return *(this->points.at(point_name));
@@ -40,15 +40,15 @@ const std::map<std::string, std::vector< std::unique_ptr<Group> > >& Group::get_
 
 void Group::parse_group_points() {
     for (auto& point_def : this->group_def["points"]) {
-        EVLOG(debug) << point_def["name"];
+        EVLOG_debug << point_def["name"];
         this->points[ point_def["name"] ] = std::make_unique<Point>(this->model, (*this), point_def, point_def["size"], this->model.offset_count);
-        EVLOG(debug) << "Created point with name " << this->points[ point_def["name"] ]->get_name() << " - Requires SF: " << this->points[ point_def["name"] ]->requires_scale_factor();
+        EVLOG_debug << "Created point with name " << this->points[ point_def["name"] ]->get_name() << " - Requires SF: " << this->points[ point_def["name"] ]->requires_scale_factor();
         this->model.offset_count += point_def["size"].get<int>();
     }
 }
 
 std::unique_ptr<Group> Group::initialize_subgroup(json& group_def) {
-    EVLOG(debug) << "Parsing group " << group_def["name"];
+    EVLOG_debug << "Parsing group " << group_def["name"];
     auto group_ptr = std::make_unique<Group>(this->model, group_def);
     group_ptr->parse_group_info();
     return group_ptr;
@@ -74,11 +74,11 @@ void Group::parse_group_groups() {
 
 void Group::parse_group_info() {
     if (utils::json_contains(this->group_def, "points")) {
-        EVLOG(debug) << "Reading group \"" << this->name << "\" points.";
+        EVLOG_debug << "Reading group \"" << this->name << "\" points.";
         this->parse_group_points();
     }
     if (utils::json_contains(this->group_def, "groups"))  {
-        EVLOG(debug) << "Reading group \"" << this->name << "\" groups.";
+        EVLOG_debug << "Reading group \"" << this->name << "\" groups.";
         this->parse_group_groups();
     }
 }
@@ -102,7 +102,7 @@ Group& Group::get_subgroup(const std::string& group_name) const {
     if (!this->groups.count(group_name)) {
         std::stringstream error_msg;
         error_msg << "Subgroup " << group_name << " does not exist inside group " << this->name;
-        EVLOG(error) << error_msg.str();
+        EVLOG_error << error_msg.str();
         throw exceptions::group_access_error(error_msg.str());
     }
     return *(this->groups.at(group_name));
@@ -114,7 +114,7 @@ Group& Group::get_repeating_group_by_index(const std::string& group_name, int gr
     if (!this->repeating_groups.count(group_name)) {
         std::stringstream error_msg;
         error_msg << "Subgroup " << group_name << " does not exist as a repeating group inside group " << this->name;
-        EVLOG(error) << error_msg.str();
+        EVLOG_error << error_msg.str();
         throw exceptions::group_access_error(error_msg.str());
     }
 
@@ -123,7 +123,7 @@ Group& Group::get_repeating_group_by_index(const std::string& group_name, int gr
     if (group_index < 0 || group_index >= repeating_group.size()) {
         std::stringstream error_msg;
         error_msg << "Repeating group with name " << group_name << "smaller than size specified by index " << group_index;
-        EVLOG(error) << error_msg.str();
+        EVLOG_error << error_msg.str();
         throw exceptions::group_access_error(error_msg.str());
     }
     return *(repeating_group[group_index]);
@@ -186,7 +186,7 @@ Point::Point(SunspecModel& model, Group& group, json& point_def, const int size,
       type(point_def["type"]), requires_scale_factor_(false),
       scale_factor_value(commons::UNDEFINED_SF_VALUE) {
 
-    EVLOG(debug) << "Creating point with name " << point_def["name"] << ", offset " << offset << ", size " << size << " inside model with name " << this->model.base_group->group_def["name"] << " and ID " << this->model.model_def["id"];
+    EVLOG_debug << "Creating point with name " << point_def["name"] << ", offset " << offset << ", size " << size << " inside model with name " << this->model.base_group->group_def["name"] << " and ID " << this->model.model_def["id"];
     
     // Checking for symbols in this point
     if (utils::json_contains(point_def, "symbols")) {
@@ -205,10 +205,10 @@ Point::Point(SunspecModel& model, Group& group, json& point_def, const int size,
 
 int16_t Point::get_scale_factor() {
 
-    EVLOG(debug) << "Attempting to read scale factor for point " << this->name << " with address offset " << this->offset;
+    EVLOG_debug << "Attempting to read scale factor for point " << this->name << " with address offset " << this->offset;
 
     if (!this->requires_scale_factor_) {
-        EVLOG(warning) << "Trying to read scale factor for a point that doesn't require one. Returning a neutral scale factor.\n";
+        EVLOG_warning << "Trying to read scale factor for a point that doesn't require one. Returning a neutral scale factor.\n";
         return 0;
     }
 
@@ -219,21 +219,21 @@ int16_t Point::get_scale_factor() {
 
     try {
         const auto& scale_factor_point = this->group.get_points().at(scale_factor_point_name);
-        EVLOG(debug) << "Scale factor of point " << this->name << " found at offset " << scale_factor_point->offset;
+        EVLOG_debug << "Scale factor of point " << this->name << " found at offset " << scale_factor_point->offset;
         int scale_factor_as_int = boost::get<int16_t>( scale_factor_point->read() );
         this->scale_factor_value = scale_factor_as_int;
     }
     catch (const std::out_of_range& oor) {
         std::stringstream error_msg;
         error_msg << "Out of range error: " << oor.what() << ". The scale factor of point " << this->name << " is not contained within the same group.";
-        EVLOG(error) << error_msg.str();
+        EVLOG_error << error_msg.str();
         exceptions::point_read_error(error_msg.str());
     }
     return this->scale_factor_value;
 }
 
 void Point::parse_symbols() {
-    EVLOG(debug) << "Parsing symbols for point " << this->name;
+    EVLOG_debug << "Parsing symbols for point " << this->name;
     for (auto& symbol : this->point_def["symbols"]) {
         this->symbols[ symbol["name"] ] = std::make_unique<Symbol>(symbol, symbol["name"], symbol["value"]);
     }
@@ -244,7 +244,7 @@ types::SunspecType Point::read() {
     try {
         types::SunspecTypeInterpreter conversion_function = conversion::sunspec_interpreters.at(this->type);
         types::SunspecType converted_value = conversion_function(bytevector);
-        EVLOG(debug) << "Point::read() - Conversion function result: " << converted_value;
+        EVLOG_debug << "Point::read() - Conversion function result: " << converted_value;
         if (this->is_numeric)
             return conversion::as_numeric(converted_value);
         return converted_value;
@@ -252,7 +252,7 @@ types::SunspecType Point::read() {
     catch (const std::out_of_range& oor) {
         std::stringstream error_msg;
         error_msg << "Out of range error: " << oor.what() << ". No type conversion function found for type " << this->type << ". Point name: " << this->name;
-        EVLOG(error) << error_msg.str();
+        EVLOG_error << error_msg.str();
         throw exceptions::point_read_error(error_msg.str());
     }
 }
@@ -289,6 +289,6 @@ Symbol::Symbol(json& symbol_def, std::string name, int value)
     : symbol_def(symbol_def), name(name),
       value(value) {
     
-    EVLOG(debug) << "Creating symbol with name " << name << " and value " << value;
+    EVLOG_debug << "Creating symbol with name " << name << " and value " << value;
 
 }
