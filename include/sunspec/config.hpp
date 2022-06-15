@@ -30,7 +30,7 @@ namespace everest { namespace sunspec { namespace config {
         if (str == "UNKNOWN") {
             std::stringstream error_msg;
             error_msg << "No config value given for parameter '" << param_name << "'.";
-            EVLOG(error) << error_msg.str();
+            EVLOG_error << error_msg.str();
             throw exceptions::input_error(error_msg.str());
         }
     }
@@ -43,7 +43,7 @@ namespace everest { namespace sunspec { namespace config {
         if (errcode != 0) {
             std::stringstream error_msg;
             error_msg << "Could not load filepath with filepath " << filepath << " - error code: " << errcode;
-            EVLOG(error) << error_msg.str();
+            EVLOG_error << error_msg.str();
             throw exceptions::input_error(error_msg.str());
         }
 

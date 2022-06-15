@@ -106,7 +106,7 @@ namespace everest { namespace sunspec {
             */
             PointType read() {
                 PointType point_value = boost::get<PointType>(this->query_point->read());
-                EVLOG(debug) << "Reader::read() - Read point value: " << point_value;
+                EVLOG_debug << "Reader::read() - Read point value: " << point_value;
                 this->cached_value = point_value;
                 return point_value;
             }
