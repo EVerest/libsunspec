@@ -14,6 +14,7 @@
 #include <modbus/modbus_client.hpp>
 #include <sunspec/types.hpp>
 
+// FIXME (aw): no using in public headers!
 using json = nlohmann::json;
 
 namespace everest { namespace sunspec {

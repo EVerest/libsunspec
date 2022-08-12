@@ -1,46 +1,94 @@
-cmake_minimum_required(VERSION 3.14.7)
+cmake_minimum_required(VERSION 3.14)
 
-# set the project name
-project(sunspec VERSION 0.1)
+project(sunspec
+    VERSION 0.1
+)
 
-include_directories(${PROJECT_SOURCE_DIR}/lib/)
+find_package(everest-cmake 0.1 REQUIRED
+    PATHS ../everest-cmake
+)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-
-find_package(EDM REQUIRED)
-
-#SET(Boost_USE_STATIC_LIBS ON)
-include_directories( ${Boost_INCLUDE_DIR} )
-
+# options
 option(BUILD_EXAMPLES "Build examples" OFF)
+option(SUNSPEC_INSTALL "Install the library (shared data might be installed anyway)" ${EVC_MAIN_PROJECT})
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/dist" CACHE PATH "..." FORCE)
+# dependencies
+find_package(Boost COMPONENTS program_options REQUIRED)
+
+if (NOT DISABLE_EDM)
+    evc_setup_edm()
+
+    # In EDM mode, we can't install exports (because the dependencies usually do not install their exports)
+    set(SUNSPEC_INSTALL OFF)
+else()
+    find_package(nlohmann_json REQUIRED)
+    find_package(everest-log REQUIRED)
+    find_package(everest-modbus REQUIRED)
 endif()
 
-add_library(libsunspec src/sunspec_device_mapping.cpp src/sunspec_device.cpp src/utils.cpp src/sunspec_model.cpp src/conversion.cpp)
-add_library(everest::sunspec ALIAS libsunspec)
-
-target_link_libraries(libsunspec
+add_library(sunspec)
+add_library(everest::sunspec ALIAS sunspec)
+target_sources(sunspec
     PRIVATE
-        ${BOOST_VARIANT_LIBRARY}
-        everest::log
+        src/sunspec_device_mapping.cpp
+        src/sunspec_device.cpp src/utils.cpp
+        src/sunspec_model.cpp
+        src/conversion.cpp
+)
+
+target_link_libraries(sunspec
+    PUBLIC
         everest::modbus
         nlohmann_json::nlohmann_json
+    PRIVATE
+        everest::log
 )
 
-target_include_directories(libsunspec
+target_include_directories(sunspec
     PUBLIC
-        ${PROJECT_SOURCE_DIR}/include/
-        ${PROJECT_SOURCE_DIR}/lib/inih/
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-
-add_subdirectory(aux)
 add_subdirectory(src)
-install(FILES config.ini DESTINATION sunspec/)
+
+# packaging
+install(
+    DIRECTORY aux/sunspec_models/json/
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/everest/sunspec/models
+)
+
+if (SUNSPEC_INSTALL)
+    install(
+        TARGETS sunspec
+        EXPORT sunspec-exports
+    )
+
+    install(
+        DIRECTORY include/ lib/
+        TYPE INCLUDE
+    )
+
+    install(
+        TARGETS sunspec_device_cli_scanner
+    )
+
+    install(
+        FILES config.ini
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/everest/sunspec/
+    )
+
+    evc_setup_package(
+        NAME everest-sunspec
+        NAMESPACE everest
+        EXPORT sunspec-exports
+        ADDITIONAL_CONTENT
+            "find_dependency(nlohmann_json)"
+            "find_dependency(everest-log)"
+    )
+endif()
+
 
 if (BUILD_EXAMPLES)
     add_subdirectory(${PROJECT_SOURCE_DIR}/examples)
