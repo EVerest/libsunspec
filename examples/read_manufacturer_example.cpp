@@ -18,7 +18,7 @@ using PointType = std::string;
 
 int main(int arg, char **argv) {
 
-    std::unique_ptr<sunspec::config::SunspecConfig> sunspec_config = sunspec::config::load_config_from_file("dist/sunspec/config.ini");
+    std::unique_ptr<sunspec::config::SunspecConfig> sunspec_config = sunspec::config::load_config_from_file("config.ini");
     
     // Initializing TCP connection
     everest::connection::TCPConnection conn(sunspec_config->modbus_config->ip_addr, sunspec_config->modbus_config->port);

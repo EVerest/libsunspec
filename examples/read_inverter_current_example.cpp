@@ -18,7 +18,7 @@ using PointType = double;
 
 int main(int arg, char **argv) {
 
-    std::unique_ptr<sunspec::config::SunspecConfig> sunspec_config = sunspec::config::load_config_from_file("dist/sunspec/config.ini");
+    std::unique_ptr<sunspec::config::SunspecConfig> sunspec_config = sunspec::config::load_config_from_file("config.ini");
     sunspec_config->query_string = "<0>::<inverter>::<A>";
     
     // Initializing TCP connection
